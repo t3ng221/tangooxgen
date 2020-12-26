@@ -1,0 +1,35 @@
+import speech_recognition as tangosr
+import pyttsx3
+import datetime
+
+listener = tangosr.Recognizer()
+oxygen = pyttsx3.init()
+voices = oxygen.getProperty('voices')
+oxygen.setProperty('voice', voices[1].id)
+
+
+def talk(text):
+    oxygen.say(text)
+    oxygen.runAndWait()
+
+
+def take_command():
+    try:
+        with tangosr.Microphone() as tangomic:
+            print('Tango is Listening.....')
+            voice = listener.listen(tangomic)
+            command = listener.recognize_google(voice)
+        if 'oxygen' in command:
+            print(command)
+    except:
+        pass
+    return command
+
+
+def run_oxygen():
+    command = take_command()
+    if 'time' in command:
+        time = datetime.datetime.now().strftime('%I:%M')
+        print(time)
+        talk('Current time is ' + time)
+run_oxygen()
